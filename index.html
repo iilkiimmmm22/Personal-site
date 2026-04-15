@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>İLKİM BEDİR — Developer Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0e;
+      --surface: #121212; /* Arka plan uyumu için çok hafif açıldı */
+      --border: #1a1a1a; /* Daha silik border'lar */
+      --text: #e8e4dc;
+      --muted: #7a7670;
+      /* MAVİ TEMA RENKLERİ */
+      --accent: #1e3a8a; /* Ana vurgu mavisi (örneğin butonlar) */
+      --accent-hover: #2563eb; /* Hover durumu için daha açık mavi */
+      --accent-glow: rgba(30, 58, 138, 0.5); /* Parıltı efekti için */
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(14,14,14,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      color: var(--text); /* Logo rengi beyaza yakın */
+      letter-spacing: 0.01em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    /* YENİ MAVİ ARKA PLAN GRADIENTLERİ */
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: 
+        radial-gradient(ellipse 60% 50% at 70% 40%, #0c1c4a 0%, transparent 70%), /* Koyu Mavi Parıltı */
+        radial-gradient(ellipse 40% 40% at 20% 80%, #050a1f 0%, transparent 60%); /* Daha Koyu Mavi Gölge */
+    }
+    /* MAVİ KARELİ (GRID) YAPI */
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(30, 58, 138, 0.15) 1px, transparent 1px), /* Çok silik mavi çizgiler */
+                        linear-gradient(90deg, rgba(30, 58, 138, 0.15) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent-hover); /* Daha görünür mavi tag */
+      border: 1px solid var(--accent-hover);
+      padding: 0.3rem 0.8rem; border-radius: 2px;
+      margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+    }
+    .hero-name span { color: var(--accent-hover); } /* İsimdeki nokta mavi */
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+      opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent); color: var(--text);
+      box-shadow: 0 4px 14px var(--accent-glow); /* Hafif mavi parıltı */
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-ghost {
+      border: 1px solid var(--border); color: var(--text);
+    }
+    .btn-ghost:hover { border-color: var(--text); transform: translateY(-2px); }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; right: 3rem; z-index: 1;
+      display: flex; align-items: center; gap: 0.6rem;
+      color: var(--muted); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0; animation: fadeUp 0.7s 1.2s forwards;
+    }
+    .scroll-line {
+      width: 40px; height: 1px; background: var(--muted);
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 7rem 3rem; position: relative; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent-hover); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--surface); border-top: 1px solid var(--border); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+      max-width: 1100px;
+    }
+    .about-text p { color: var(--muted); margin-bottom: 1rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .skills-list {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem;
+    }
+    .skill-tag {
+      font-size: 0.8rem; letter-spacing: 0.05em;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 2px; color: var(--muted);
+      transition: all 0.2s;
+    }
+    .skill-tag:hover { border-color: var(--accent-hover); color: var(--accent-hover); }
+    .about-stats { display: flex; flex-direction: column; gap: 2rem; }
+    .stat-item { border-left: 2px solid var(--accent); padding-left: 1.5rem; }
+    .stat-num {
+      font-family: var(--serif); font-size: 3rem; line-height: 1;
+      color: var(--accent-hover); margin-bottom: 0.3rem;
+    }
+    .stat-label { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── PROJECTS ── */
+    #projects { border-top: 1px solid var(--border); }
+    /* Projeler bölümüne de çok hafif mavi parıltı ekleyelim */
+    #projects::before {
+        content:''; position: absolute; inset: 0;
+        background: radial-gradient(circle at 10% 10%, #050a1f 0%, transparent 40%);
+        opacity: 0.6; z-index: 0;
+    }
+    .projects-grid {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem; max-width: 1100px;
+    }
+    .project-card {
+      background: #161616; /* Kartlar biraz daha belirgin */
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative; overflow: hidden;
+    }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--accent-hover);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .project-card:hover { border-color: #3a3a3a; transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-lang {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+    .project-title {
+      font-family: var(--serif); font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+    .project-desc { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .project-link {
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .project-link:hover { color: var(--accent-hover); }
+    .project-link::after { content: '→'; transition: transform 0.2s; }
+    .project-link:hover::after { transform: translateX(4px); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    #contact .section-title { margin-bottom: 1rem; }
+    .contact-sub { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; }
+    .contact-links { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .contact-link {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2px;
+      transition: all 0.2s;
+    }
+    .contact-link:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--muted); font-size: 0.8rem;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">IB</div>
+    <ul class="nav-links">
+      <li><a href="#about">Hakkında</a></li>
+      <li><a href="#projects">Projeler</a></li>
+      <li><a href="#contact">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">İş için kullanılabilir</div>
+      <h1 class="hero-name">İLKİM<br/><span>BEDİR.</span></h1>
+      <p class="hero-sub">
+        Genç web geliştiricisi, temiz, işlevsel şeyler inşa ediyor HTML, 
+        CSS, JavaScript ve Python.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">Çalışmalarımı Gör</a>
+        <a href="#contact" class="btn btn-ghost">İletişime Geçin</a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Kaydır
+    </div>
+  </section>
+
+  <section id="about">
+    <p class="section-label reveal">Hakkımda</p>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <h2 class="section-title">Kendi kendini geliştiren.<br/>Daima üreten.</h2>
+        <p>
+          Türkiye merkezli, becerilerini geliştirmek için pratik projelere odaklanan 
+          bir geliştiriciyim. Fikirleri gerçek, çalışan kodlara dönüştürmeyi seviyorum.
+        </p>
+        <div class="skills-list">
+          <span class="skill-tag">HTML</span>
+          <span class="skill-tag">CSS</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">GitHub</span>
+        </div>
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-item">
+          <div class="stat-num">3+</div>
+          <div class="stat-label">GitHub Projesi</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Öğrenme Motivasyonu</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <p class="section-label reveal">Çalışmalar</p>
+    <h2 class="section-title reveal">Projeler</h2>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-lang">HTML</div>
+        <h3 class="project-title">Güzellik Websitesi</h3>
+        <p class="project-desc">HTML ile oluşturulmuş temiz bir açılış sayfası.</p>
+        <a href="https://github.com/iilkiimmmm22/Website" target="_blank" class="project-link">GitHub'da Gör</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <p class="section-label reveal">İletişim</p>
+    <h2 class="section-title reveal">Konuşalım.</h2>
+    <div class="contact-links reveal">
+      <a href="mailto:bedirilkim@gmail.com" class="contact-link">E-posta</a>
+      <a href="https://github.com/iilkiimmmm22" target="_blank" class="contact-link">GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 İLKİM BEDİR</span>
+    <span>HTML, CSS & JS ile oluşturuldu</span>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
